@@ -1,0 +1,50 @@
+Initialize DiffPAT class with prop_param, dataset_param, DiffPAT_param  
+  - Inherit from base method class  
+  - Store DiffPAT_param  
+  - Set input shape from prop_param.input_shape  
+  - Initialize physical_lim_func using physical_constraint function  
+  - Define loss using CustomLoss with parameters:  
+    - prop_param  
+    - expand_ratio: prop_param.prop_resize_ratio  
+    - loss_type: DiffPAT_param['loss']  
+    - intensity_lamda: float(DiffPAT_param['intensity_lamda'])  
+Input:  
+  - target: Target acoustic field (shape: [batch, Ny, Nz, planes])  
+  - get_computation_time: Boolean flag to return computation time  
+
+Steps:  
+  1. Initialize phase to optimize:  
+     phase2opt ← Random normal tensor of shape (1, input_shape[0], input_shape[1], 1)  
+     Convert target to TensorFlow tensor of type float32  
+
+  2. Define optimizer:  
+     optmizer ← Adam(learning_rate=DiffPAT_param['learning_rate'],  
+                     beta_1=0.9, beta_2=0.999, epsilon=1e-8)  
+
+  3. Define loss function:  
+     loss_fn ← lambda: loss(target, phase2opt)  
+
+  4. Start timer:  
+     start ← current time  
+
+  5. Perform iterative optimization:  
+     For i in range(DiffPAT_param['iteration']):  
+        - Minimize loss function with optimizer on phase2opt  
+        - Every 10 iterations:  
+           Print iteration number  
+           Assess target and propagated pressure using:  
+             - target_img ← target  
+             - propagated_pressure ← propagate(physical_lim_func(phase2opt))  
+
+  6. Apply physical constraints:  
+     phase2opt ← physical_lim_func(phase2opt)  
+
+  7. End timer:  
+     end ← current time  
+     computation_time ← end - start  
+
+  8. Return results:  
+     If get_computation_time is True:  
+        Return phase2opt, computation_time  
+     Else:  
+        Return phase2opt  
