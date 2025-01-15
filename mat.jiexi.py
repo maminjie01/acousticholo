@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 加载 .mat 文件  G:\谷歌浏览器下载\HUnet-main_1\HUnet-main\test_result\DiffPAT_cosine_similarity_2MHz_64_250um\T_retrieved_phase.mat
-data = scipy.io.loadmat('G:\\谷歌浏览器下载\\HUnet-main_1\\HUnet-main\\test_result\\DiffPAT_cosine_similarity_2MHz_64_250um\T_retrieved_phase.mat')
+data = scipy.io.loadmat('G:DiffPAT_cosine_similarity_2MHz_64_250um\T_retrieved_phase.mat')
 
 # 访问 phase_angle 变量
 phase_angle = data['phase_angle']
