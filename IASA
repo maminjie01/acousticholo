@@ -1,0 +1,43 @@
+Input:  
+  Expected target amplitude hologram AE  
+  Distance between target hologram and source hologram z0  
+  Wavelength λ  
+  fx and fy are frequency domain coordinates  
+
+Output:  
+  Source phase hologram PS  
+  Reconstructed target amplitude hologram AC  
+  Expected target amplitude hologram AE  
+
+1. Initialize:  
+    AC ← 0m,n  
+    iteration ← 0  
+2. Randomly select AE from the dataset and set AC ← AE  
+3. Initialize PC ← 0m,n and AU ← 1m,n  
+4. Set Atemp ← 0m,n · ∞  
+
+5. Compute transfer function:  
+   H(fx, fy) ← exp{−j (2π/λ) · z0 · [1 − (λfx)^2 − (λfy)^2]^0.5}  
+
+6. While Atemp − AC ≤ a or iteration < b do  
+   7. Compute intermediate hologram:  
+      A1, PS ← IFFT{FFT{AC · exp(j · PC)} · H^−1(fx, fy)}  
+   8. Normalize amplitude:  
+      A1 ← AU  
+   9. Update target hologram:  
+      AC, PC ← IFFT{FFT{A1 · exp(j · PS)} · H(fx, fy)}  
+  10. Update iteration values:  
+      Atemp ← AC  
+      AC ← AE  
+      iteration ← iteration + 1  
+11. End  
+
+12. Compute final source hologram:  
+    A1, PS ← IFFT{FFT{AC · exp(j · PC)} · H^−1(fx, fy)}  
+13. Normalize amplitude:  
+    A1 ← AU  
+14. Reconstruct target hologram:  
+    AC, PC ← IFFT{FFT{A1 · exp(j · PS)} · H(fx, fy)}  
+
+15. Collect and store results:  
+    Collect {AC, PS} and {AE} respectively  
