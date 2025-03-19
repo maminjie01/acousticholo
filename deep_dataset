@@ -1,0 +1,62 @@
+Class DeepHUG_Datasets:
+    Initialize(params):
+        1. Check if params contain all required parameters
+        2. Set paths, dataset size, image shape, training ratio, target type, etc.
+        3. Compute dilation factor
+        4. Call __check_availability() to validate parameters
+
+    Method __get_line(shape, start, end):
+        1. Create an empty image (all zeros)
+        2. Compute anti-aliased line coordinates (rr, cc, val) from start to end
+        3. Fill the line in the image
+        4. Apply morphological dilation
+        5. Return the image
+
+    Method get_circle(shape, radius, location):
+        1. Create an empty image
+        2. Compute the circle at location with given radius (rr, cc)
+        3. Fill the circle in the image
+        4. Compute a forbidden area (rr2, cc2) with twice the radius
+        5. Return the image, rr2, cc2
+
+    Method __get_forbidFoV():
+        1. Compute the field of view
+        2. Determine the forbidden placement areas (forbid_x, forbid_y)
+        3. Return forbid_x, forbid_y
+
+    Method __get_allowables(allow_x, allow_y, forbid_x, forbid_y):
+        1. Remove forbidden points from allow_x, allow_y
+        2. Return updated allow_x, allow_y
+
+    Method __get_randomCenter(allow_x, allow_y):
+        1. Select a random point as the target object’s center
+        2. Return the selected coordinates
+
+    Method __get_randomStartEnd(shape):
+        1. Generate random start and end points
+        2. Return start, end
+
+    Method __get_RandDots(shape, maxnum=[10, 20]):
+        1. Generate n random dots (n depends on maxnum)
+        2. Place these dots in the given shape dimensions
+        3. Apply dilation operation
+        4. Return the image with dots
+
+    Method __get_RandLines(shape, maxnum=[10, 20]):
+        1. Generate n random line segments
+        2. Place these lines in the given shape dimensions
+        3. Normalize the image
+        4. Return the image with lines
+
+    Method __get_RandBlobs(shape, maxnum=[10, 12], radius=5, intensity=1):
+        1. Generate n random blobs
+        2. Place these blobs in the given shape dimensions
+        3. Adjust blob intensity
+        4. Return the image with blobs
+
+    Method coord2image(coords):
+        1. Create an empty image (sample)
+        2. Iterate over multiple depth planes (num_planes)
+        3. Draw the target object on the canvas (call get_circle())
+        4. Merge multiple image channels
+        5. Return the final sample
